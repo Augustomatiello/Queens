@@ -7,10 +7,12 @@ public class Queens {
 
 		int[] posicoesRainhas;
 		char[][] tabuleiro;
+		int n;
 		
-		public Queens() {
-			posicoesRainhas = new int[8];
-			tabuleiro = new char[8][8];
+		public Queens(int k) {
+			n = k;
+			posicoesRainhas = new int[n];
+			tabuleiro = new char[n][n];
 		}
 
 				
@@ -21,7 +23,8 @@ public class Queens {
 			float cr;
 			Random r = new Random();
 			int[] randomNum = new int[3];
-			int[] u = new int[8];
+			int[] u = new int[n];
+			int k = 20;
 			int v;
 			int minLocal;
 			posicoesRainhas = geraPosicoes();
@@ -32,21 +35,24 @@ public class Queens {
 			
 			while(fim != 0 && geracao < 500000) {
 				
-				for(int i = 0; i < 8; i++){
+				for(int i = 0; i < n; i++){
 					randomNum = geraTresNum(i);
-					v = (randomNum[0] + randomNum[2] - randomNum[1] + 8)%8;
+					v = (randomNum[0] + randomNum[2] - randomNum[1] + n)%n;
 					cr = r.nextFloat();
-					if(cr < 0.4){
-						u[i] = v;
+					
+					for(int j = 0; j < k; j++){
+						if(cr < 0.4){
+							u[i] = v;
+						}
+						else u[i] = posicoesRainhas[i];
+						minLocal = calcularHeuristica(u);
+						if(minLocal < fim){
+							posicoesRainhas = u;
+							fim  = calcularHeuristica(posicoesRainhas);
+						}
 					}
-					else u[i] = posicoesRainhas[i];
 				}
-				minLocal = calcularHeuristica(u);
-				if(minLocal < fim){
-					posicoesRainhas = u;
-				}
-	
-				fim  = calcularHeuristica(posicoesRainhas);
+				
 				geracao++;
 			}
 			long elapsedTime = System.currentTimeMillis()-start;
@@ -61,7 +67,7 @@ public class Queens {
 			ArrayList<Integer> list = new ArrayList<Integer>();
 			int[] vet = new int[3];
 			int cont = 0;
-	        for (int i = 0; i < 8; i++) {
+	        for (int i = 0; i < n; i++) {
 	            list.add(new Integer(i));
 	        }
 	        Collections.shuffle(list);
@@ -81,11 +87,11 @@ public class Queens {
 			List<Integer> randomPos = new ArrayList<Integer>();
 
 			Random r = new Random();
-			for (int i = 0; i < 8; i++) {
-				randomPos.add(r.nextInt(8));
+			for (int i = 0; i < n; i++) {
+				randomPos.add(r.nextInt(n));
 			}
 
-			int[] randomPosicoes = new int[8];
+			int[] randomPosicoes = new int[n];
 
 			for (int i = 0; i < randomPos.size(); i++) {
 				randomPosicoes[i] = randomPos.get(i);
@@ -116,8 +122,8 @@ public class Queens {
 			}
 			System.out.println(" ");
 			
-			for (int coluna = 0; coluna < 8; coluna++) {
-				for (int linha = 0; linha < 8; linha++) {
+			for (int coluna = 0; coluna < n; coluna++) {
+				for (int linha = 0; linha < n; linha++) {
 				System.out.print(tabuleiro[coluna][linha] + " ");	
 				}
 				System.out.println(" ");
@@ -132,8 +138,8 @@ public class Queens {
 			int linha2;
 			int coluna1;
 			int coluna2;
-			for(int i = 0; i < 8; i++) {
-				for(int j = i+1; j < 8; j++) {
+			for(int i = 0; i < n; i++) {
+				for(int j = i+1; j < n; j++) {
 					linha1 = vet[i];
 					linha2 = vet[j];
 					coluna1 = i;
@@ -154,7 +160,7 @@ public class Queens {
 
 	
 		public static void main(String[] args) {
-			Queens rainhas = new Queens();
+			Queens rainhas = new Queens(8);
 			rainhas.DE();
 		}
 		
